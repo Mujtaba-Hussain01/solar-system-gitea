@@ -26,9 +26,9 @@ pipeline {
                 stage('OWASP Dependency Check') {
                     steps {
                         DependencyCheck additionalArguments: '''
-                            --scan . 
-                            --format 'ALL'
-                            --out ./dependency-check-report
+                            --scan \'./\' 
+                            --out \'./\'
+                            --format \'ALL\'
                             --pretty-print''', odcInstallation: 'OWASP-DepCheck-10'
                         
                     }
