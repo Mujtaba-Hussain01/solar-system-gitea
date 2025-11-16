@@ -49,34 +49,18 @@ pipeline {
 
         stage('Unit Testing') {
             steps {
-                // withCredentials([
-                //     usernamePassword(
-                //         credentialsId: 'mongo_db_creds',
-                //         passwordVariable: 'MONGO_PASSWORD',
-                //         usernameVariable: 'MONGO_USERNAME'
-                //     )
-                // ]) {
+
                 sh 'echo colon-separated-credentials: $MONGO_DB_CREDS - $MONGO_USERNAME : $MONGO_PASSWORD'
                 
                 sh 'npm test'
-                // }
-
             }
         }
 
         stage('Code Coverage') {
             steps {
-                // withCredentials([
-                //     usernamePassword(
-                //         credentialsId: 'mongo_db_creds',
-                //         passwordVariable: 'MONGO_PASSWORD',
-                //         usernameVariable: 'MONGO_USERNAME'
-                //     )
-                // ]) { 
                 catchError(buildResult: 'SUCCESS', message: 'oops! will fix in future', stageResult: 'UNSTABLE') {
                     sh 'npm run coverage'
                 }
-                // }
             }
         }
     }
