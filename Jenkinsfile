@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        MONGO_URI = 'mongodb://localhost:27017/superData'
+        MONGO_URI = 'mongodb://mujtaba:mujtaba1234@localhost:27017/superData'
     }
 
     stages {
