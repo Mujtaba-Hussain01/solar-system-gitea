@@ -11,6 +11,7 @@ pipeline {
 
     stages {
         stage('Install Dependencies') {
+            options {timestamps()}
             steps {
                 sh 'npm install --no-audit'
             }
@@ -28,6 +29,7 @@ pipeline {
                 }
 
                 stage('OWASP Dependency Check') {
+                    options {retry(2)}
                     steps {
                         dependencyCheck additionalArguments: '''
                             --scan ./ 
