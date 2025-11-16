@@ -60,6 +60,8 @@ pipeline {
                 //         usernameVariable: 'MONGO_USERNAME'
                 //     )
                 // ]) {
+                sh 'echo colon-separated-credentials: $MONGO_DB_CREDS - $MONGO_USERNAME : $MONGO_PASSWORD'
+                
                 sh 'npm test'
                 // }
 
