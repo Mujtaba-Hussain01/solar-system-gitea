@@ -39,7 +39,22 @@ var dataSchema = new Schema({
 });
 var planetModel = mongoose.model('planets', dataSchema);
 
-
+app.get('/planets', async (req, res) => {
+  try {
+    const planets = await planetModel.find(); // Fetch all documents
+    res.status(200).json({
+      success: true,
+      count: planets.length,
+      data: planets
+    });
+  } catch (error) {
+    console.error("Error fetching planets:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+});
 
 app.post('/planet',   function(req, res) {
    // console.log("Received Planet ID " + req.body.id)

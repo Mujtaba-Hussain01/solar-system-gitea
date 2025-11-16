@@ -6,8 +6,12 @@ pipeline {
     }
 
     environment {
-        MONGO_URI = 'mongodb://mujtaba:mujtaba1234@localhost:27017/superData'
+        // MONGO_URI = 'mongodb://localhost:27017/superData'
+        MONGO_URI = 'mongodb+srv://us-visa.xixp6rv.mongodb.net/superData'
+
         MONGO_DB_CREDS = credentials('mongo_db_creds')
+        MONGO_USERNAME = credentials('mongodb_username')
+        MONGO_PASSWORD = credentials('mongodb_password')
     }
 
     stages {
@@ -41,11 +45,6 @@ pipeline {
 
                         dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: true
 
-                        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'dependency check HTML Report', reportTitles: 'HTML Report', useWrapperFileDirectly: true])
-
-                        junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
-
-
                     }
                 }
             }
@@ -65,7 +64,6 @@ pipeline {
                 sh 'npm test'
                 // }
 
-                junit allowEmptyResults: true, testResults: 'test_results.xml'
             }
         }
 
@@ -82,8 +80,17 @@ pipeline {
                     sh 'npm run coverage'
                 }
                 // }
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
+        }
+    }
+
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
+            junit allowEmptyResults: true, testResults: 'test_results.xml'
+
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'dependency check HTML Report', reportTitles: 'HTML Report', useWrapperFileDirectly: true])
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
 }
