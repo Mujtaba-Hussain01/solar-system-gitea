@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         MONGO_URI = 'mongodb://mujtaba:mujtaba1234@localhost:27017/superData'
+        MONGO_DB_CREDS = credentials('mongo_db_creds')
     }
 
     stages {
@@ -52,15 +53,15 @@ pipeline {
 
         stage('Unit Testing') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'mongo_db_creds',
-                        passwordVariable: 'MONGO_PASSWORD',
-                        usernameVariable: 'MONGO_USERNAME'
-                    )
-                ]) {
-                    sh 'npm test'
-                }
+                // withCredentials([
+                //     usernamePassword(
+                //         credentialsId: 'mongo_db_creds',
+                //         passwordVariable: 'MONGO_PASSWORD',
+                //         usernameVariable: 'MONGO_USERNAME'
+                //     )
+                // ]) {
+                sh 'npm test'
+                // }
 
                 junit allowEmptyResults: true, testResults: 'test_results.xml'
             }
@@ -68,17 +69,17 @@ pipeline {
 
         stage('Code Coverage') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'mongo_db_creds',
-                        passwordVariable: 'MONGO_PASSWORD',
-                        usernameVariable: 'MONGO_USERNAME'
-                    )
-                ]) { 
-                    catchError(buildResult: 'SUCCESS', message: 'oops! will fix in future', stageResult: 'UNSTABLE') {
-                        sh 'npm run coverage'
-                    }
+                // withCredentials([
+                //     usernamePassword(
+                //         credentialsId: 'mongo_db_creds',
+                //         passwordVariable: 'MONGO_PASSWORD',
+                //         usernameVariable: 'MONGO_USERNAME'
+                //     )
+                // ]) { 
+                catchError(buildResult: 'SUCCESS', message: 'oops! will fix in future', stageResult: 'UNSTABLE') {
+                    sh 'npm run coverage'
                 }
+                // }
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
         }
