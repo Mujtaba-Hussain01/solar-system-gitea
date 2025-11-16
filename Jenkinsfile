@@ -6,12 +6,9 @@ pipeline {
     }
 
     environment {
-        // MONGO_URI = 'mongodb://localhost:27017/superData'
-        MONGO_URI = 'mongodb+srv://us-visa.xixp6rv.mongodb.net/superData'
-
-        MONGO_DB_CREDS = credentials('mongo_db_creds')
         MONGO_USERNAME = credentials('mongodb_username')
         MONGO_PASSWORD = credentials('mongodb_password')
+        MONGO_URI = "mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@us-visa.xixp6rv.mongodb.net/superData"
     }
 
     stages {
