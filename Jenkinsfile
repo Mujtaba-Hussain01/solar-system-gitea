@@ -5,6 +5,10 @@ pipeline {
         nodejs 'Nodejs-20-19-5'
     }
 
+    environment {
+        MONGO_URI = ""mongodb://mujtaba:mujtaba@1234@localhost:27017/superData""
+    }
+
     stages {
         stage('Install Dependencies') {
             steps {
@@ -46,7 +50,10 @@ pipeline {
 
         stage('Unit Testing') {
             steps {
-                sh 'npm test'
+                withCredentials([usernamePassword(credentialsId: 'mongo_db_creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')])
+                    sh 'npm test'
+            
+                junit allowEmptyResults: true, testResults: 'test_results.xml'
             }
         }
     }
