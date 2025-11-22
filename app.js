@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require('cors')
 const serverless = require('serverless-http')
-
+require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
@@ -19,10 +19,11 @@ mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, function(err) {
+    console.log("Connecting to MongoDB...", process.env.MONGO_URI)
     if (err) {
         console.log("error!! " + err)
     } else {
-      //  console.log("MongoDB Connection Successful")
+        console.log("MongoDB Connection Successful")
     }
 })
 
@@ -38,7 +39,22 @@ var dataSchema = new Schema({
 });
 var planetModel = mongoose.model('planets', dataSchema);
 
-
+app.get('/planets', async (req, res) => {
+  try {
+    const planets = await planetModel.find(); // Fetch all documents
+    res.status(200).json({
+      success: true,
+      count: planets.length,
+      data: planets
+    });
+  } catch (error) {
+    console.error("Error fetching planets:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+});
 
 app.post('/planet',   function(req, res) {
    // console.log("Received Planet ID " + req.body.id)
