@@ -3,12 +3,14 @@ pipeline {
 
     tools {
         nodejs 'Nodejs-20-19-5'
+        
     }
 
     environment {
         MONGO_USERNAME = credentials('mongodb_username')
         MONGO_PASSWORD = credentials('mongodb_password')
         MONGO_URI = "mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@us-visa.xixp6rv.mongodb.net/superData"
+        // SONAR_SCANNER_HOME = tool 'SonarQube-Scanner-610'
     }
 
     stages {
@@ -63,13 +65,29 @@ pipeline {
                 }
             }
         }
+
+        stage('SAST - sonarQube Analysis') {
+            steps {
+                // sh 'echo $SONAR_SCANNER_HOME'
+                sh '''
+                    sonar \
+                        -Dsonar.sources=. app.js \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.token=sqp_909c39c1c463ca1547480031f2c0dbf268ffcd64 \
+                        -Dsonar.projectKey=sonarqube
+            '''
+                
+                }
+            }
+        }
+
+        
     }
 
     post {
         always {
             junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
             junit allowEmptyResults: true, testResults: 'test_results.xml'
-
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'dependency check HTML Report', reportTitles: 'HTML Report', useWrapperFileDirectly: true])
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
