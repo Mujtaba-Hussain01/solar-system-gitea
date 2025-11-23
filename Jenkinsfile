@@ -84,6 +84,14 @@ pipeline {
             }
         }
 
+        stage('Build Docker Image') {
+            steps {
+                sh 'printenv'
+                sh 'docker build -t mujtaba7794/solar-system-gitea:latest .'
+                }
+            }
+        }
+
         
     }
 
