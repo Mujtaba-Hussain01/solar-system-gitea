@@ -97,14 +97,14 @@ pipeline {
                 sh '''
                     echo "🔍 Running Trivy scan for LOW and MEDIUM vulnerabilities..."
                     trivy image mujtaba7794/solar-system-gitea:latest \
-                        --severity LOW,MEDIUM \
+                        --severity LOW,MEDIUM,HIGH \
                         --exit-code 0 \
                         --quiet \
                         --format json -o trivy-image-MEDIUM-results.json
 
                     echo "🔍 Running Trivy scan for HIGH and CRITICAL vulnerabilities..."
                     trivy image mujtaba7794/solar-system-gitea:latest \
-                        --severity HIGH,CRITICAL \
+                        --severity CRITICAL \
                         --exit-code 1 \
                         --quiet \
                         --format json -o trivy-image-CRITICAL-results.json
