@@ -103,7 +103,7 @@ pipeline {
                         --format json -o trivy-image-MEDIUM-results.json
 
                     echo "🔍 Running Trivy scan for HIGH and CRITICAL vulnerabilities..."
-                    trivy image mujtaba/solar-system-gitea:latest \
+                    trivy image mujtaba7794/solar-system-gitea:latest \
                         --severity HIGH,CRITICAL \
                         --exit-code 1 \
                         --quiet \
