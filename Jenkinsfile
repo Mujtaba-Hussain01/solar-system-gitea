@@ -139,6 +139,14 @@ pipeline {
 
         }
 
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub_login_creds', url: ""){
+                    sh 'docker push mujtaba7794/solar-system-gitea:latest'
+                }
+            }
+        }
+
     }
 
     post {
