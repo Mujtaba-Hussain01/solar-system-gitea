@@ -6,8 +6,8 @@ aws --version
 Data=$(aws ec2 describe-instances)
 echo "Data - $Data"
 
-URL=$(echo "$Data" | jq -r '.Reservations[].Instances[] 
-    | select(.Tags != null and (.Tags[]?.Value=="solar-system")) 
+URL=$(echo "$Data" | jq -r '.Reservations[].Instances[]
+    | select(.Tags? != null and (.Tags[]?.Value=="solar-system"))
     | .PublicDnsName')
 
 echo "URL Data - $URL"
