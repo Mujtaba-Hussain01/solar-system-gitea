@@ -147,6 +147,32 @@ pipeline {
             }
         }
 
+        stage('Deploy - AWS EC2 via SSH') {
+            when {
+                branch 'feature/*'
+            }
+            steps {
+                script {
+                    sshagent(['aws-dev-deploy-ec2-instance']){
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ubuntu@65.0.124.150 "
+                                if sudo docker ps -a | grep -q solar-system-gitea; then
+                                    echo 'Stopping and removing existing solar-system-gitea container...'
+                                        sudo docker stop solar-system-gitea && sudo docker rm solar-system-gitea
+                                    echo 'Existing container stopped and removed.'
+                                fi
+                                    sudo docker run --name solar-system-gitea \
+                                        -e MONGO_URI=$MONGO_URI \
+                                        -e MANAGE_USERS=$MANGO_USERNAME \
+                                        -e MANAGE_USERS_PASSWORD=$MONGO_PASSWORD \
+                                        -p 3000:3000 -d mujtaba7794/solar-system-gitea:latest
+                            "
+                        ''' 
+                    }
+                } 
+            }
+        }
+
     }
 
     post {
