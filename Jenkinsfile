@@ -173,6 +173,21 @@ pipeline {
             }
         }
 
+        stage('Integration Testing - AWS EC2') {
+            when {
+                branch 'feature/*'
+            }
+            steps {
+                sh 'printenv | grep -i branch'
+                withAWS(credentials: 'lambda_ec2_s3_creds', region: 'ap-south-1') {
+                    sh  '''
+                        bash integration-testing-ec2.sh
+                    '''
+                }
+            }
+        }
+
+
     }
 
     post {
