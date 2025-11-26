@@ -1,24 +1,24 @@
 #!/bin/bash
-echo "Intergation test........"
+echo "Integration test........"
 
 aws --version
 
 Data=$(aws ec2 describe-instances)
 echo "Data - $Data"
 
-URL=$(echo "$Data" | jq -r '.Reservations[].Instances[] | select(.Tags[].Value == "solar-system") | .PublicDnsName')
+URL=$(echo "$Data" | jq -r '.Reservations[].Instances[] 
+    | select(.Tags != null and (.Tags[]?.Value=="solar-system")) 
+    | .PublicDnsName')
 
 echo "URL Data - $URL"
 
 if [[ -n "$URL" ]]; then
-    
     http_code=$(curl -s -o /dev/null -w "%{http_code}" "http://$URL:3000/live")
     echo "http_code - $http_code"
 
     planet_data=$(curl -s -XPOST "http://$URL:3000/planet" \
         -H "Content-Type: application/json" \
         -d '{"id": "3"}')
-
     echo "planet_data - $planet_data"
 
     planet_name=$(echo "$planet_data" | jq -r '.name')
@@ -30,8 +30,10 @@ if [[ -n "$URL" ]]; then
         echo "One or more test(s) failed"
         exit 1
     fi
-
 else
     echo "Could not fetch a token/URL; Check/Debug line 8"
     exit 1
 fi
+
+
+
