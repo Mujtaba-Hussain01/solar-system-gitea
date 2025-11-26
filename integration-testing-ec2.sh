@@ -5,7 +5,7 @@ aws --version
 
 Data=$(aws ec2 describe-instances)
 echo "Data - "$Data
-URL=$(aws ec2 describe-instances | jq -r ' .Reservations[].Instances[] | select(.Tags[].Value == "dev-deploy") | .PublicDnsName')
+URL=$(aws ec2 describe-instances | jq -r ' .Reservations[].Instances[] | select(.Tags[].Value == "solar-system") | .PublicDnsName')
 echo "URL Data - "$URL
 
 if [[ "$URL" != '' ]]; then
