@@ -155,7 +155,7 @@ pipeline {
                 script {
                     sshagent(['aws-dev-deploy-ec2-instance']){
                         sh '''
-                            ssh -o StrictHostKeyChecking=no ubuntu@65.0.124.150 "
+                            ssh -o StrictHostKeyChecking=no ubuntu@13.203.203.192 "
                                 if sudo docker ps -a | grep -q solar-system-gitea; then
                                     echo 'Stopping and removing existing solar-system-gitea container...'
                                         sudo docker stop solar-system-gitea && sudo docker rm solar-system-gitea
